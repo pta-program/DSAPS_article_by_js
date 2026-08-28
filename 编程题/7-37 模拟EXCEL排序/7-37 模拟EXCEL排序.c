@@ -37,9 +37,11 @@ int cmp(const void *a, const void *b) {
             return strcmp(sa->id, sb->id);
         case 2:
             // c=2：按姓名排序，姓名相同时按学号排序
-            int name_cmp = strcmp(sa->name, sb->name);
-            if (name_cmp != 0) {
-                return name_cmp;
+            {
+                int name_cmp = strcmp(sa->name, sb->name);
+                if (name_cmp != 0) {
+                    return name_cmp;
+                }
             }
             // 姓名相同，按学号递增排序
             return strcmp(sa->id, sb->id);

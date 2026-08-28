@@ -90,22 +90,10 @@ int main() {
     for (i = 0; i < m; i++) {
         fgets(buf, sizeof(buf), stdin);      // 读取陈述语句
         buf[strcspn(buf, "\r\n")] = 0;       // 去除换行符
-        char x[NAME_LEN], y[NAME_LEN];       // 存储两个名字
-        sscanf(buf, "%s %*s %*s %*s %s", x, y);   // 解析：第一个和最后一个名字
-
-        char tmp[100];                       // 临时存储语句
-        strcpy(tmp, buf);                    // 复制语句到tmp
-        char *keyword = NULL;                // 存储关系关键词
-        if (strstr(tmp, "child"))            // 查找"child"
-            keyword = "child";
-        else if (strstr(tmp, "parent"))      // 查找"parent"
-            keyword = "parent";
-        else if (strstr(tmp, "sibling"))     // 查找"sibling"
-            keyword = "sibling";
-        else if (strstr(tmp, "descendant"))  // 查找"descendant"
-            keyword = "descendant";
-        else if (strstr(tmp, "ancestor"))    // 查找"ancestor"
-            keyword = "ancestor";
+        char x[NAME_LEN], y[NAME_LEN], keyword[NAME_LEN];
+        /* 关系句式为“X is a/the/an relation of Y”，目标姓名是第6个词。 */
+        if (sscanf(buf, "%14s %*s %*s %14s %*s %14s", x, keyword, y) != 3)
+            continue;
 
         int xi = findName(x);                // 查找x的索引
         int yi = findName(y);                // 查找y的索引

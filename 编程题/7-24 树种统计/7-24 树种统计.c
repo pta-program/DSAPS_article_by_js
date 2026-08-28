@@ -12,10 +12,15 @@
 
 #define MAX_LEN 32   // 每个树种名称最大字符数
 
+static int compare_names(const void *a, const void *b) {
+    return strcmp((const char *)a, (const char *)b);
+}
+
 int main() {
     int n;                        // 树的总数
     scanf("%d", &n);              // 读入 n
-    getchar();                    // 消耗 n 后面的换行符
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF) { }
 
     // 动态分配二维字符数组，存储所有树种名称
     char (*arr)[MAX_LEN] = malloc(sizeof(char) * MAX_LEN * n);
@@ -27,8 +32,7 @@ int main() {
     }
 
     // 使用标准库 qsort 对数组按字典序排序
-    qsort(arr, n, MAX_LEN,
-          (int (*)(const void *, const void *))strcmp);
+    qsort(arr, (size_t)n, sizeof(arr[0]), compare_names);
 
     // 一次扫描：排序后相同名称相邻，统计每种的数量并输出
     int i = 0;                     // 当前扫描位置

@@ -227,6 +227,24 @@ void printTree(DirNode *node, int depth) {
     }
 }
 
+/* 释放目录树及其拥有的文件名字符串 */
+void freeTree(DirNode *node) {
+    int i;
+
+    if (node == NULL) {
+        return;
+    }
+    for (i = 0; i < node->child_count; i++) {
+        freeTree(node->children[i]);
+    }
+    for (i = 0; i < node->file_count; i++) {
+        free(node->files[i]);
+    }
+    free(node->children);
+    free(node->files);
+    free(node);
+}
+
 /**
  * 主函数
  */
@@ -251,6 +269,7 @@ int main() {
     
     sortChildren(root);    // 排序所有子目录和文件
     printTree(root, 0);   // 从根节点开始打印目录树
+    freeTree(root);
     
     return 0;
 }

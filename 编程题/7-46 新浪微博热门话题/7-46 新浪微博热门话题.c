@@ -7,8 +7,7 @@
  * 4. 遍历哈希表找最大计数，并列则按字母序选最小，并统计并列第一的数量
  * 5. 输出时仅将首字母大写（原 key 全小写）
  *
- * 注意：题目虽提及“超过40字符只保留前40字符”，但实测对该测试点做截断会导致答案错误，
- *       故此处不截断，与官方通过的标程行为一致。
+ * 题目规定话题原文超过40个字符时只保留前40个字符，再进行标准化和计数。
  */
 
 #include <stdio.h>
@@ -96,6 +95,7 @@ static void processWeibo(HashTable *ht, const char *line, int weibo_idx) {
 
         char raw[MAX_LINE];
         int topic_len = (int)(end - start);
+        if (topic_len > 40) topic_len = 40;
         memcpy(raw, start, topic_len);
         raw[topic_len] = '\0';
 

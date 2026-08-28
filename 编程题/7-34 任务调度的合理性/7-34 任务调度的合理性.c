@@ -70,6 +70,17 @@ void add_edge(AdjList *graph, int u, int v) {
     }
 }
 
+void free_graph(AdjList *graph, int n) {
+    for (int i = 1; i <= n; i++) {
+        AdjNode *p = graph[i].head;
+        while (p != NULL) {
+            AdjNode *next = p->next;
+            free(p);
+            p = next;
+        }
+    }
+}
+
 int main() {
     int n;  // 子任务数
     scanf("%d", &n);
@@ -133,6 +144,7 @@ int main() {
     } else {  // 否则存在环，任务调度不可行
         printf("0\n");
     }
-    
+
+    free_graph(graph, n);
     return 0;
 }

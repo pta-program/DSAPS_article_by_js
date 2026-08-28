@@ -57,8 +57,8 @@ void add_edge(int u, int v) {
 /*
  * 从 start 出发进行 BFS，返回距离 ≤ 6 的结点数（含自身）
  */
-int bfs(int start, int N) {
-    int i, count = 0;                       /* count：记录可到达的结点数 */
+int bfs(int start) {
+    int count = 0;                          /* count：记录可到达的结点数 */
 
     memset(visited, 0, sizeof(visited));    /* 重置访问标记数组，全部置0 */
 
@@ -101,7 +101,7 @@ int main() {
 
     /* 对每个结点进行BFS并输出百分比 */
     for (i = 1; i <= N; i++) {              /* 遍历所有结点，编号从1开始 */
-        int cnt = bfs(i, N);                /* 从结点i出发BFS，得到可达结点数 */
+        int cnt = bfs(i);                   /* 从结点i出发BFS，得到可达结点数 */
         double pct = 100.0 * cnt / N;       /* 计算百分比 */
         printf("%d: %.2f%%\n", i, pct);     /* 输出格式：编号: 百分比% */
     }

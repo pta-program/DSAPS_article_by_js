@@ -26,17 +26,58 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+#define BIG_BASE 1000000000U
+#define BIG_DIGITS 16
+
+typedef struct {
+    uint32_t digit[BIG_DIGITS];
+    int size;
+} BigInteger;
+
+static void add_u64(BigInteger *value, uint64_t addend) {
+    int i = 0;
+    uint64_t carry = 0;
+
+    while (addend != 0 || carry != 0) {
+        uint64_t part = addend % BIG_BASE;
+        uint64_t sum = (uint64_t)value->digit[i] + part + carry;
+        value->digit[i] = (uint32_t)(sum % BIG_BASE);
+        carry = sum / BIG_BASE;
+        addend /= BIG_BASE;
+        if (i + 1 > value->size) {
+            value->size = i + 1;
+        }
+        i++;
+    }
+}
+
+static void print_big_integer(const BigInteger *value) {
+    int i;
+
+    if (value->size == 0) {
+        puts("0");
+        return;
+    }
+    printf("%u", value->digit[value->size - 1]);
+    for (i = value->size - 2; i >= 0; i--) {
+        printf("%09u", value->digit[i]);
+    }
+    putchar('\n');
+}
 
 // 比较函数，用于qsort升序排序
 int cmp(const void *a, const void *b) {
-    // 将void指针转换为long long指针并解引用比较
-    return *(long long *)a - *(long long *)b;
+    long long left = *(const long long *)a;
+    long long right = *(const long long *)b;
+    return (left > right) - (left < right);
 }
 
 int main() {
-    // 声明变量：优惠券数量n，商品数量m，结果res
+    // 乘积本身可以放入long long，但所有乘积的总和可能超过64位整数。
     int n, m;
-    long long res = 0;
+    BigInteger res = {{0}, 0};
     
     // 读取优惠券数量和优惠券数组
     scanf("%d", &n);
@@ -64,7 +105,7 @@ int main() {
     while (right_c >= left_c && right_p >= left_p) {
         // 如果两个正数相乘，累加结果并移动指针
         if (coupons[right_c] > 0 && products[right_p] > 0) {
-            res += coupons[right_c] * products[right_p];
+            add_u64(&res, (uint64_t)(coupons[right_c] * products[right_p]));
             right_c--;
             right_p--;
         } else {
@@ -77,7 +118,7 @@ int main() {
     while (left_c <= right_c && left_p <= right_p) {
         // 如果两个负数相乘（结果为正），累加结果并移动指针
         if (coupons[left_c] < 0 && products[left_p] < 0) {
-            res += coupons[left_c] * products[left_p];
+            add_u64(&res, (uint64_t)(coupons[left_c] * products[left_p]));
             left_c++;
             left_p++;
         } else {
@@ -87,7 +128,7 @@ int main() {
     }
     
     // 输出最大回报
-    printf("%lld\n", res);
+    print_big_integer(&res);
     
     // 释放动态分配的内存
     free(coupons);

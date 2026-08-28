@@ -22,58 +22,61 @@
 
 #include <stdio.h> // 引入标准输入输出库，用于 scanf 和 printf 函数
 
-#define MAX_EXP 1001 // 定义常量 MAX_EXP 为 1001，表示单个多项式的最大指数范围（0~1000）
-#define MAX_PROD 2001 // 定义常量 MAX_PROD 为 2001，表示两个多项式乘积的最大指数范围（0~2000）
+#define MAX_ABS_EXP 1000
+#define OFFSET (MAX_ABS_EXP * 2)
+#define WIDTH (OFFSET * 2 + 1)
 
-int poly1[MAX_EXP] = {0}; // 定义全局数组 poly1，存储第一个多项式的系数，下标表示指数，值为系数，全部初始化为 0
-int poly2[MAX_EXP] = {0}; // 定义全局数组 poly2，存储第二个多项式的系数，下标表示指数，值为系数，全部初始化为 0
-int sum[MAX_EXP]  = {0}; // 定义全局数组 sum，存储两个多项式相加的结果，下标表示指数，值为系数，全部初始化为 0
-int prod[MAX_PROD] = {0}; // 定义全局数组 prod，存储两个多项式相乘的结果，下标表示指数，值为系数，全部初始化为 0
+/* 下标 e + OFFSET 对应指数 e，覆盖 -2000 到 2000。 */
+static long long poly1[WIDTH];
+static long long poly2[WIDTH];
+static long long sum[WIDTH];
+static long long prod[WIDTH];
 
-void readPoly( int arr[] ) // 定义函数 readPoly，用于从标准输入读取多项式数据并存入数组 arr
+void readPoly( long long arr[] )
 {
-    int n, c, e; // 声明三个整型变量：n 为多项式的非零项数，c 为系数，e 为指数
-    scanf( "%d", &n ); // 读取多项式的非零项数并存入 n
-    for ( int i = 0; i < n; i++ ) { // 循环 n 次，依次读取每一项的系数和指数
-        scanf( "%d %d", &c, &e ); // 读取一对"系数 指数"存入 c 和 e
-        arr[e] = c; // 将系数 c 存入数组 arr 的下标 e 处（即指数为 e 的项的系数为 c）
+    int n;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        int coefficient, exponent;
+        scanf("%d %d", &coefficient, &exponent);
+        arr[exponent + OFFSET] = coefficient;
     }
 }
 
-void printPoly( int arr[], int maxExp ) // 定义函数 printPoly，用于按指数从高到低输出多项式 arr，maxExp 为数组的最大指数上限
+void printPoly(const long long arr[], int min_exp, int max_exp)
 {
-    int first = 1; // 定义标志变量 first，标记是否是第一个输出的项（用于处理空格分隔），初始值 1 表示是第一个
-    for ( int e = maxExp; e >= 0; e-- ) { // 从最高指数开始向下遍历到 0，确保输出按指数降序排列
-        if ( arr[e] != 0 ) { // 如果当前指数处的系数不为 0，说明存在这一项，需要输出
-            if ( !first ) // 如果不是第一个输出的项
-                printf( " " ); // 在前面输出一个空格，与前一项分隔
-            printf( "%d %d", arr[e], e ); // 输出"系数 指数"
-            first = 0; // 已经输出过至少一项，将 first 置为 0
+    int first = 1;
+    for (int exponent = max_exp; exponent >= min_exp; exponent--) {
+        long long coefficient = arr[exponent + OFFSET];
+        if (coefficient != 0) {
+            if (!first) printf(" ");
+            printf("%lld %d", coefficient, exponent);
+            first = 0;
         }
     }
-    if ( first ) // 如果遍历结束后 first 仍为 1，说明多项式为零多项式（所有系数均为 0）
-        printf( "0 0" ); // 零多项式按题目约定输出 "0 0"
-    printf( "\n" ); // 输出一个换行符，结束当前多项式的输出
+    if (first) printf("0 0");
+    printf("\n");
 }
 
 int main( void ) // 主函数，程序入口
 {
-    readPoly( poly1 ); // 调用 readPoly 函数，读取第一个多项式的数据到 poly1 数组
-    readPoly( poly2 ); // 调用 readPoly 函数，读取第二个多项式的数据到 poly2 数组
+    readPoly(poly1);
+    readPoly(poly2);
 
-    for ( int e = 0; e < MAX_EXP; e++ ) // 遍历所有可能的指数（0~MAX_EXP-1）
-        sum[e] = poly1[e] + poly2[e]; // 多项式加法：将对应指数的系数相加，存入 sum 数组
+    for (int exponent = -MAX_ABS_EXP; exponent <= MAX_ABS_EXP; exponent++) {
+        sum[exponent + OFFSET] = poly1[exponent + OFFSET] + poly2[exponent + OFFSET];
+    }
 
-    for ( int i = 0; i < MAX_EXP; i++ ) { // 遍历多项式 1 的所有指数 i
-        if ( poly1[i] == 0 ) continue; // 如果多项式 1 在指数 i 处的系数为 0，跳过以节省计算
-        for ( int j = 0; j < MAX_EXP; j++ ) { // 遍历多项式 2 的所有指数 j
-            if ( poly2[j] == 0 ) continue; // 如果多项式 2 在指数 j 处的系数为 0，跳过以节省计算
-            prod[i + j] += poly1[i] * poly2[j]; // 多项式乘法：系数相乘，指数相加（i+j），累加到 prod 的对应位置
+    for (int e1 = -MAX_ABS_EXP; e1 <= MAX_ABS_EXP; e1++) {
+        if (poly1[e1 + OFFSET] == 0) continue;
+        for (int e2 = -MAX_ABS_EXP; e2 <= MAX_ABS_EXP; e2++) {
+            if (poly2[e2 + OFFSET] == 0) continue;
+            prod[e1 + e2 + OFFSET] += poly1[e1 + OFFSET] * poly2[e2 + OFFSET];
         }
     }
 
-    printPoly( prod, MAX_PROD - 1 ); // 输出乘积多项式，最大指数为 MAX_PROD - 1 = 2000
-    printPoly( sum,  MAX_EXP  - 1 ); // 输出和多项式，最大指数为 MAX_EXP - 1 = 1000
+    printPoly(prod, -OFFSET, OFFSET);
+    printPoly(sum, -MAX_ABS_EXP, MAX_ABS_EXP);
 
     return 0; // 主函数正常结束，返回 0 表示程序执行成功
 }

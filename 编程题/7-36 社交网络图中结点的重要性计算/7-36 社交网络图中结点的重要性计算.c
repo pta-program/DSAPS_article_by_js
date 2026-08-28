@@ -88,6 +88,19 @@ void add_edge(AdjList *graph, int u, int v) {
     }
 }
 
+void free_graph(AdjList *graph, int n) {
+    int i;
+
+    for (i = 1; i <= n; i++) {
+        AdjNode *p = graph[i].head;
+        while (p != NULL) {
+            AdjNode *next = p->next;
+            free(p);
+            p = next;
+        }
+    }
+}
+
 // BFS计算从start到所有结点的最短距离，并返回距离之和
 int bfs(AdjList *graph, int n, int start) {
     int dist[MAX_N];      // 存储从start到各结点的最短距离
@@ -165,7 +178,7 @@ int main() {
         int sum_dist = bfs(graph, n, node);
         
         double cc;
-        if (sum_dist == -1) {
+        if (sum_dist == -1 || n <= 1) {
             cc = 0.0;  // 图不连通，紧密度中心性为0
         } else {
             // 紧密度中心性 = (n-1) / 距离之和
@@ -175,6 +188,8 @@ int main() {
         // 输出结果，保留两位小数
         printf("Cc(%d)=%.2f\n", node, cc);
     }
-    
+
+    free_graph(graph, n);
+
     return 0;
 }

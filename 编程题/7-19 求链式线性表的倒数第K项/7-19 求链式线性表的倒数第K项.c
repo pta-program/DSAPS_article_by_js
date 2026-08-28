@@ -35,6 +35,14 @@ Node *createNode(int data) {    // 创建新节点的函数，参数为节点数
     return node;                // 返回新创建节点的指针
 }
 
+void freeList(Node *head) {
+    while (head != NULL) {
+        Node *next = head->next;
+        free(head);
+        head = next;
+    }
+}
+
 int main() {                    // 主函数入口
     int k, val;                 // k为倒数第K个的位置，val为读取的每个数值
     scanf("%d", &k);            // 读取K值
@@ -55,6 +63,7 @@ int main() {                    // 主函数入口
     for (int i = 0; i < k; i++) {  // p指针先向前走k步
         if (p == NULL) {            // 如果p还没走完k步就到了链表末尾
             printf("NULL\n");       // 说明链表长度不足K，输出NULL
+            freeList(head);
             return 0;               // 程序结束
         }
         p = p->next;                // p向后移动一步
@@ -70,5 +79,6 @@ int main() {                    // 主函数入口
         printf("NULL\n");          // 输出NULL
     }
 
+    freeList(head);
     return 0;                     // 程序正常结束
 }
