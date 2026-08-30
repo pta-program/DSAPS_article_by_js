@@ -13,7 +13,7 @@ PTA《数据结构与算法题目集（中文版）》的题解与 C 语言实�
 
 ## 在线阅读
 
-部署完成后，站点地址为：
+Pages 启用并完成首次 Actions 部署后，站点地址为：
 
 ```text
 https://pta-program.github.io/DSAPS_article_by_C/
@@ -26,6 +26,10 @@ https://pta-program.github.io/DSAPS_article_by_C/
 - 上一题 / 下一题导航；
 - 代码复制与缩放查看；
 - 页面右下角暗黑模式切换，并记住用户选择。
+
+## 首次启用 GitHub Pages
+
+仓库管理员需要在 GitHub 打开 `Settings` → `Pages`，将 `Build and deployment` 的 `Source` 设为 `GitHub Actions`。保存后重新运行 `Deploy Docsify to GitHub Pages` 工作流，或向 `main` 推送新的提交。
 
 ## 本地预览
 
