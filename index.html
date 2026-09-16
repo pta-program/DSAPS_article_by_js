@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="PTA 数据结构与算法题目集中文版题解与 C 语言实现说明">
-  <title>DSAPS by C · PTA 题解</title>
+  <meta name="description" content="PTA 数据结构与算法题目集中文版题解与 JavaScript（Node.js）实现说明">
+  <title>DSAPS by JavaScript · PTA 题解</title>
   <script>
     (function () {
       var saved = localStorage.getItem('docsify-dark-mode');
@@ -194,14 +194,17 @@
 
   <script>
     window.$docsify = {
-      name: 'DSAPS by C',
-      repo: 'https://github.com/pta-program/DSAPS_article_by_C',
+      name: 'DSAPS by JavaScript',
+      repo: 'https://github.com/pta-program/DSAPS_article_by_javascript',
       homepage: 'README.md',
       loadSidebar: true,
       alias: { '/.*/_sidebar.md': '/_sidebar.md' },
       subMaxLevel: 0,
       auto2top: true,
       relativePath: false,
+      mermaidConfig: {
+        querySelector: '.mermaid'
+      },
       search: {
         placeholder: '🔍 搜索题号 / 关键词',
         noData: '没有找到结果',
@@ -261,6 +264,11 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/countable@3/dist/countable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-count@1/dist/countable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-cpp.min.js"></script>
 </body>
