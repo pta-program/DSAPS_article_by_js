@@ -1,4 +1,4 @@
-# DSAPS by C
+## DSAPS by C
 
 PTA《数据结构与算法题目集（中文版）》的题解与 C 语言实现说明。
 
