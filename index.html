@@ -132,6 +132,18 @@
       color: var(--text-color) !important;
     }
 
+    .markdown-section .mermaid {
+      max-width: 100%;
+      overflow: auto;
+      padding: 8px 0;
+    }
+
+    .markdown-section .mermaid svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
     .search .search-container,
     .search .search-container .search {
       background: var(--surface-bg) !important;
@@ -266,7 +278,19 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify-count@1/dist/countable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({ startOnLoad: false });
+    mermaid.initialize({
+      startOnLoad: false,
+      // 限制单图文本和连线规模，避免异常内容触发超大 SVG 和内存峰值。
+      maxTextSize: 20000,
+      maxEdges: 200,
+      flowchart: {
+        htmlLabels: false,
+        useMaxWidth: true,
+        nodeSpacing: 20,
+        rankSpacing: 24,
+        padding: 8,
+      },
+    });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
